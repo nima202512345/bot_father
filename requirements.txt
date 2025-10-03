@@ -1,7 +1,7 @@
 gunicorn
 Flask
-aiogram==3.2.0          # ربات تلگرام
-aiohttp==3.8.5          # وبسرور و webhook
-telethon==1.28.0        # userbot تلگرام
-requests==2.31.0        # ارسال دیتابیس به bot
-python-dotenv==1.0.0    # خواندن متغیرهای .env
+aiogram           # ربات تلگرام
+aiohttp          # وبسرور و webhook
+telethon        # userbot تلگرام
+requests              # ارسال دیتابیس به bot
+python-dotenv    # خواندن متغیرهای .env
