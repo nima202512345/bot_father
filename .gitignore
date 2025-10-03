@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 .env
 targets.db
+userbot_collector.py
+session
