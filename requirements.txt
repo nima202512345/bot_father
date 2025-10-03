@@ -1,4 +1,5 @@
 python-dotenv
+gunicorn
 aiogram
 aiohttp
 Flask
