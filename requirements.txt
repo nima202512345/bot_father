@@ -1,5 +1,4 @@
 gunicorn
-python-3.11.8
 Flask
 aiogram==3.2.0          # ربات تلگرام
 aiohttp==3.8.5          # وبسرور و webhook
