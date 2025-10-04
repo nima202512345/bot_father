@@ -51,7 +51,7 @@ conn.commit()
 
 # دریافت فایل DB از userbot
 async def upload_db(request):
-    key = request.headers.get("Authorization")
+    key = request.headers.get("X-Upload-Key")
     if key != UPLOAD_KEY:
         return web.json_response({"error": "unauthorized"}, status=401)
 

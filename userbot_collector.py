@@ -228,7 +228,11 @@ async def collect_recent_message_authors(group_input, limit_messages: int =5):
             upload_file("new_users.json")
 
         if new_users:
+            print("[DEBUG] قبل از ارسال فایل JSON")
             send_new_users_as_file(new_users)
+            print("[DEBUG] بعد از ارسال فایل JSON")
+
+
 
 
 
@@ -249,7 +253,9 @@ def send_new_users_as_file(new_users_list):
     try:
         content = json.dumps({"new_users": new_users_list}, ensure_ascii=False).encode("utf-8")
         files = {"file": ("new_users.json", content)}
-        headers = {"Authorization": UPLOAD_KEY}
+        headers = {"X-Upload-Key": UPLOAD_KEY}
+        print("[DEBUG] ارسال با Authorization =", UPLOAD_KEY)
+
         resp = requests.post(UPLOAD_URL, files=files, headers=headers, timeout=30)
         print(f"[INFO] send_new_users_as_file: {resp.status_code} - {resp.text}")
         return resp
