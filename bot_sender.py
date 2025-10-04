@@ -146,7 +146,6 @@ def main():
         await dp.feed_update(bot, update)
         return web.Response(text="ok")
 
-    app.router.add_post(f"/{API_TOKEN}", handle_webhook)
 
     app.router.add_get("/dashboard", dashboard)
     app.router.add_post("/upload_db", upload_db)
