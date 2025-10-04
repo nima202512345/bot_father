@@ -139,12 +139,18 @@ def main():
     SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, on_startup=on_startup, on_shutdown=on_shutdown)
 
+    async def home(request):
+        return web.Response(text="Bot is alive ✅")
+
+    app.router.add_get("/", home)
+
     # مسیر وبهوک برای دریافت آپدیت‌ها از تلگرام
     async def handle_webhook(request):
         data = await request.json()
         update = types.Update(**data)
         await dp.feed_update(bot, update)
         return web.Response(text="ok")
+
 
 
     app.router.add_get("/dashboard", dashboard)

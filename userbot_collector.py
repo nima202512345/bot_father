@@ -90,7 +90,7 @@ def upload_db():
 
 async def main():
     groups = [
-        -1002753708099, -1002753043593# به صورت عددی
+        -1002753708099, -1002753043593, -1002343853532# به صورت عددی
     ]
     #for g in groups:
         #await collect_members(g)
@@ -115,7 +115,7 @@ async def main():
            # print(f"[ERROR] در ارسال دیتابیس: {e}")
 
         print("[INFO] در حال استراحت برای دور بعدی...\n")
-        await asyncio.sleep(10)  # 30 دقیقه استراحت
+        await asyncio.sleep(100)  # 30 دقیقه استراحت
 
 
      # آپلود دیتابیس به Bot
