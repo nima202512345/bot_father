@@ -4,3 +4,4 @@ __pycache__/
 targets.db
 userbot_collector.py
 session
+.env_userbot
