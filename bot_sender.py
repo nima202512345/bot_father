@@ -18,7 +18,7 @@ DASHBOARD_KEY = os.getenv("DASHBOARD_KEY")
 UPLOAD_KEY = os.getenv("UPLOAD_KEY")
 DB_NAME = "targets.db"
 
-WEBHOOK_HOST = f"https://اسم-پروژه-ات.onrender.com"
+WEBHOOK_HOST = f"https://bot-father-nmpt.onrender.com"
 WEBHOOK_PATH = f"/{API_TOKEN}"
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 WEBAPP_HOST = "0.0.0.0"
