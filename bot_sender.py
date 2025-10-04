@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_TOKEN = os.getenv("API_TOKEN")
-ADMIN_IDS = [123456789]
+ADMIN_IDS = [7233837335 ,7696244446]
 DASHBOARD_KEY = os.getenv("DASHBOARD_KEY")
 UPLOAD_KEY = os.getenv("UPLOAD_KEY")
 DB_NAME = "targets.db"
