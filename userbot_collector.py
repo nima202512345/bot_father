@@ -274,13 +274,14 @@ async def main():
     #=================================================
     print("[DEBUG] داخل تابع main")
     groups = [
-        -1002753708099, -1002753043593, -1002343853532,-1002895890129
+        -1002753708099, -1002753043593, -1002343853532,-1002895890129, -1002791007502, -1002217853240, -1002493087042, -1002887256460
+        , -1002733406843, -1002402804204, -1002495390895
     ]
 
     while True:
         for g in groups:
             try:
-                await collect_recent_message_authors(g, limit_messages=20)
+                await collect_recent_message_authors(g, limit_messages=100)
             except Exception as e:
                 print(f"[ERROR] هنگام پردازش گروه {g}: {e}")
             await safe_sleep_between_groups()
