@@ -198,8 +198,15 @@ def merge_userbot_users_into_db():
     logger.info("شروع merge_userbot_users_into_db ...")
     try:
         with open("userbot_users.json", "r", encoding="utf-8") as f:
-            users = json.load(f)
-            logger.info(f"خواندن فایل userbot_users.json با تعداد کاربران: {len(users)}")
+            raw_data = json.load(f)
+
+            if isinstance(raw_data, dict) and "userbot_users" in raw_data:
+                users = raw_data["userbot_users"]
+            elif isinstance(raw_data, list):
+                users = raw_data
+            else:
+                logger.error("فرمت فایل userbot_users.json نامعتبر است.")
+                return
 
         new_count = 0
 
