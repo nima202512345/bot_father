@@ -234,8 +234,8 @@ def merge_userbot_users_into_db():
 #==========================================================
 
 
-@routes.post("/upload")
-async def upload(request):
+@routes.post("/userbot_users")
+async def userbot_users(request):
     key = request.headers.get("X-Upload-Key")
     if key != os.getenv("UPLOAD_KEY"):
         return web.Response(text="Invalid key", status=403)
