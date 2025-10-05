@@ -280,7 +280,7 @@ async def main():
     while True:
         for g in groups:
             try:
-                await collect_recent_message_authors(g, limit_messages=10)
+                await collect_recent_message_authors(g, limit_messages=20)
             except Exception as e:
                 print(f"[ERROR] هنگام پردازش گروه {g}: {e}")
             await safe_sleep_between_groups()

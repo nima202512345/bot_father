@@ -1,4 +1,5 @@
 import os
+import json
 import sqlite3
 import logging
 import asyncio
@@ -197,6 +198,41 @@ async def on_shutdown(app):
 #+++=============================================================
 # ───── آپلود فایل از userbot یا از بات اصلی ─────
 routes = web.RouteTableDef()
+#===================================================================
+
+
+def merge_userbot_users_into_db():
+    try:
+        with open("userbot_users.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        users = data.get("new_users", [])
+        new_count = 0
+
+        for user in users:
+            chat_id = user.get("id")
+            username = user.get("username")
+            first_name = user.get("first_name")
+            last_name = user.get("last_name")
+            lang = user.get("lang") or detect_language(first_name or "")
+
+            # بررسی وجود در دیتابیس
+            cursor.execute("SELECT 1 FROM targets WHERE chat_id = ?", (chat_id,))
+            if cursor.fetchone():
+                continue
+
+            cursor.execute("""
+                INSERT INTO targets (chat_id, username, first_name, last_name, lang)
+                VALUES (?, ?, ?, ?, ?)
+            """, (chat_id, username, first_name, last_name, lang))
+            new_count += 1
+
+        conn.commit()
+        print(f"[INFO] merge_userbot_users_into_db: {new_count} کاربر جدید اضافه شد.")
+    except Exception as e:
+        print(f"[ERROR] merge_userbot_users_into_db: {e}")
+#==========================================================
+
 
 @routes.post("/upload")
 async def upload(request):
@@ -205,9 +241,14 @@ async def upload(request):
         return web.Response(text="Invalid key", status=403)
 
     data = await request.post()
+    if "file" not in data:
+        return web.Response(text="Missing file", status=400)
+
     file = data["file"]
     with open("new_users.json", "wb") as f:
         f.write(file.file.read())
+                
+    merge_userbot_users_into_db()
 
     return web.Response(text="Main upload OK")
 
@@ -218,11 +259,15 @@ async def user_upload(request):
         return web.Response(text="Invalid key", status=403)
 
     data = await request.post()
+    if "file" not in data:
+        return web.Response(text="Missing file", status=400)
+
     file = data["file"]
     with open("userbot_users.json", "wb") as f:
         f.write(file.file.read())
 
     return web.Response(text="Userbot upload OK")
+
 
 def main():
     app = web.Application()
