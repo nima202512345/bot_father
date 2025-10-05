@@ -202,23 +202,30 @@ routes = web.RouteTableDef()
 
 
 def merge_userbot_users_into_db():
+    print("[DEBUG] شروع merge_userbot_users_into_db ...")
+
     try:
         with open("userbot_users.json", "r", encoding="utf-8") as f:
-            data = json.load(f)
+            users = json.load(f)
+            print(f"[DEBUG] فایل userbot_users.json خوانده شد — تعداد کاربران داخل فایل: {len(users)}")
 
-        users = data.get("userbot_users", [])
         new_count = 0
 
-        for user in users:
+        for idx, user in enumerate(users):
+            print(f"[DEBUG] پردازش کاربر {idx + 1}: {user}")
+
             chat_id = user.get("id")
             username = user.get("username")
             first_name = user.get("first_name")
             last_name = user.get("last_name")
             lang = user.get("lang") or detect_language(first_name or "")
 
+            print(f"[DEBUG] → اطلاعات: chat_id={chat_id}, username={username}, lang={lang}")
+
             # بررسی وجود در دیتابیس
             cursor.execute("SELECT 1 FROM targets WHERE chat_id = ?", (chat_id,))
             if cursor.fetchone():
+                print(f"[INFO] کاربر {chat_id} قبلاً در دیتابیس وجود دارد. رد شد.")
                 continue
 
             cursor.execute("""
@@ -226,11 +233,15 @@ def merge_userbot_users_into_db():
                 VALUES (?, ?, ?, ?, ?)
             """, (chat_id, username, first_name, last_name, lang))
             new_count += 1
+            print(f"[INFO] کاربر {chat_id} با موفقیت اضافه شد.")
 
         conn.commit()
         print(f"[INFO] merge_userbot_users_into_db: {new_count} کاربر جدید اضافه شد.")
+
     except Exception as e:
         print(f"[ERROR] merge_userbot_users_into_db: {e}")
+
+
 #==========================================================
 
 
