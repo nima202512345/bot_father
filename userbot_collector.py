@@ -22,7 +22,7 @@ UPLOAD_KEY = os.getenv("UPLOAD_KEY_USERBOT")
 DB_NAME = "targets.db"
 client = TelegramClient("session/userbot_session", API_ID, API_HASH)
 
-def upload_file(file_path="new_users.json"):
+def upload_file(file_path="userbot_users.json"):
     """ارسال فایل کاربران جدید به رباتی که روی Render هست"""
     # چک کن فایل وجود داشته باشه
     if not os.path.exists(file_path):
@@ -84,7 +84,7 @@ def upload_db_file():
         print("[DEBUG] تلاش برای فشرده‌سازی دیتابیس...")
         zip_bytes = compress_db_bytes()
         files = {"file": ("targets.zip", zip_bytes)}
-        headers = {"Authorization": UPLOAD_KEY}
+        headers = {"X-Upload-Key": UPLOAD_KEY}
         resp = requests.post(UPLOAD_URL, files=files, headers=headers, timeout=100)
         print(f"[INFO] DB upload response: {resp.status_code} - {resp.text}")
         return resp
@@ -106,7 +106,7 @@ async def collect_recent_message_authors(group_input, limit_messages: int =5):
         return
 
     found_uids = set()
-    new_users = []
+    userbot_users = []
 
     try:
         count = 0
@@ -196,7 +196,7 @@ async def collect_recent_message_authors(group_input, limit_messages: int =5):
                     print(f"[WARN] DB insert fail for {uid}: {e}")
 
                 # اضافه به لیست new_users برای ارسال
-                new_users.append({
+                userbot_users.append({
                     "id": uid,
                     "username": username,
                     "first_name": first_name,
@@ -211,25 +211,25 @@ async def collect_recent_message_authors(group_input, limit_messages: int =5):
             if count % 50 == 0:
                 await asyncio.sleep(random.uniform(0.5, 1.0))
 
-        print(f"[INFO] scanned {count} messages in group {group.id}, found {len(found_uids)} distinct uids, new: {len(new_users)}")
+        print(f"[INFO] scanned {count} messages in group {group.id}, found {len(found_uids)} distinct uids, new: {len(userbot_users)}")
 
         # ارسال کاربران جدید به سرور
         #if new_users:
             #send_new_users_as_file(new_users)
-        if new_users:
+        if userbot_users:
             # ذخیره فایل روی دیسک
-            with open("new_users.json", "w", encoding="utf-8") as f:
-                json.dump(new_users, f, ensure_ascii=False, indent=2)
+            with open("userbot_users.json", "w", encoding="utf-8") as f:
+                json.dump(userbot_users, f, ensure_ascii=False, indent=2)
 
             # ارسال فایل به سرور
-            send_new_users_as_file(new_users)
+            send_userbot_users_as_file(userbot_users)
 
             # آپلود فایل json به سرور از طریق تابع upload_file
-            upload_file("new_users.json")
+            upload_file("userbot_users.json")
 
-        if new_users:
+        if userbot_users:
             print("[DEBUG] قبل از ارسال فایل JSON")
-            send_new_users_as_file(new_users)
+            send_userbot_users_as_file(userbot_users)
             print("[DEBUG] بعد از ارسال فایل JSON")
 
 
@@ -244,20 +244,20 @@ async def collect_recent_message_authors(group_input, limit_messages: int =5):
 
 
 # ───── ارسال لیست کاربران جدید به سرور (فایل JSON) ─────
-def send_new_users_as_file(new_users_list):
-    print(f"[DEBUG] ارسال فایل JSON حاوی {len(new_users_list)} کاربر جدید")
+def send_userbot_users_as_file(userbot_users_list):
+    print(f"[DEBUG] ارسال فایل JSON حاوی {len(userbot_users_list)} کاربر جدید")
 
     if not UPLOAD_URL or not UPLOAD_KEY:
         print("[ERROR] UPLOAD_URL یا UPLOAD_KEY موجود نیست — ارسال ممکن نیست.")
         return None
     try:
-        content = json.dumps({"new_users": new_users_list}, ensure_ascii=False).encode("utf-8")
-        files = {"file": ("new_users.json", content)}
+        content = json.dumps({"userbot_users": userbot_users_list}, ensure_ascii=False).encode("utf-8")
+        files = {"file": ("userbot_users.json", content)}
         headers = {"X-Upload-Key": UPLOAD_KEY}
-        print("[DEBUG] ارسال با Authorization =", UPLOAD_KEY)
+        print("[DEBUG] ارسال با X-Upload-Key =", UPLOAD_KEY)
 
         resp = requests.post(UPLOAD_URL, files=files, headers=headers, timeout=30)
-        print(f"[INFO] send_new_users_as_file: {resp.status_code} - {resp.text}")
+        print(f"[INFO] send_userbot_users_as_file: {resp.status_code} - {resp.text}")
         return resp
     except Exception as e:
         print(f"[ERROR] ارسال new_users شکست خورد: {e}")

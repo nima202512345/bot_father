@@ -206,7 +206,7 @@ def merge_userbot_users_into_db():
         with open("userbot_users.json", "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        users = data.get("new_users", [])
+        users = data.get("userbot_users", [])
         new_count = 0
 
         for user in users:
@@ -245,9 +245,9 @@ async def upload(request):
         return web.Response(text="Missing file", status=400)
 
     file = data["file"]
-    with open("new_users.json", "wb") as f:
+    with open("userbot_users.json", "wb") as f:
         f.write(file.file.read())
-                
+
     merge_userbot_users_into_db()
 
     return web.Response(text="Main upload OK")
